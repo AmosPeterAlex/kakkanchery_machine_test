@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nexteons_machine_test/controller/controller.dart';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:nexteons_machine_test/controller/controller.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
 
@@ -11,49 +15,25 @@ class HomePage extends StatelessWidget {
     controller.fetchData();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Document List'),
-      ),
       body: Obx(
-        () {
+            () {
           if (controller.isLoading.value) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('UID')),
-                  DataColumn(label: Text('Type')),
-                  DataColumn(label: Text('Image')),
-                ],
-                rows: List.generate(
-                  controller.testModel.value.data?.list?.length ?? 0,
-                  (index) => DataRow(
-                    cells: [
-                      DataCell(Text(
-                          controller.testModel.value.data?.list?[index].name ??
-                              '')),
-                      DataCell(Text(
-                          '${controller.testModel.value.data?.list?[index].uid}')),
-                      DataCell(_buildDocumentTypeIndicator(controller
-                          .testModel.value.data?.list?[index].docType)),
-                      DataCell(
-                        SizedBox(
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(controller
-                                    .testModel.value.data?.list?[index].url ??
-                                ''),
-                          ),
-                        ),
-                      ),
-                    ],
+          }  else {
+            return ListView.builder(
+              itemCount: controller.testModel.value.data?.list?.length ?? 0,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(controller.testModel.value.data?.list?[index].name ?? '',style: TextStyle(fontSize: 12),),
+                  subtitle: Text('UID: ${controller.testModel.value.data?.list?[index].uid}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
+                  trailing: _buildDocumentTypeIndicator(controller.testModel.value.data?.list?[index].docType),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(controller.testModel.value.data?.list?[index].url ?? ''),
                   ),
-                ),
-              ),
+                );
+              },
             );
           }
         },
@@ -92,109 +72,3 @@ class HomePage extends StatelessWidget {
   }
 }
 
-/*
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final TestController controller = Get.put(TestController());
-    controller.fetchData();
-    return Scaffold(
-      body: Obx(
-        () {
-          return controller.isLoading.value
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Center(
-                child: DataTable(
-                    columns: <DataColumn>[
-                      DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Name',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'UID',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'DocType',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Image',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                    ],
-                    rows: <DataRow>[
-                      for (int index = 0;
-                          index <
-                              (controller.testModel.value.data?.list?.length ??
-                                  0);
-                          index++)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(
-                                Text(
-                                "${controller.testModel.value.data?.list?[index].name}")),
-                            DataCell(Text(
-                                "${controller.testModel.value.data?.list?[index].uid}")),
-                            // DataCell(Text(
-                            //     "${controller.testModel.value.data?.list?[index].uid}")),
-                            DataCell(Text(checkDoc(controller , index))),
-                            DataCell(
-                              Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(controller.testModel.value
-                                            .data?.list?[index].url
-                                            .toString() ?? ""),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-              );
-        },
-      ),
-    );
-  }
-
-  String checkDoc(TestController controller, int index) {
-    if (controller.testModel.value.data?.list?[index].docType == 0) {
-      return "image";
-    } else if (controller.testModel.value.data?.list?[index].docType == 1) {
-      return "video";
-    } else if (controller.testModel.value.data?.list?[index].docType == 2) {
-      return "audio";
-    } else if (controller.testModel.value.data?.list?[index].docType == 3) {
-      return "document";
-    } else {
-      return "null";
-    }
-  }
-}
-
-
- */
