@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nexteons_machine_test/controller/controller.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:nexteons_machine_test/controller/controller.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
 
@@ -16,24 +12,37 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       body: Obx(
-            () {
+        () {
           if (controller.isLoading.value) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          }  else {
-            return ListView.builder(
-              itemCount: controller.testModel.value.data?.list?.length ?? 0,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(controller.testModel.value.data?.list?[index].name ?? '',style: TextStyle(fontSize: 12),),
-                  subtitle: Text('UID: ${controller.testModel.value.data?.list?[index].uid}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
-                  trailing: _buildDocumentTypeIndicator(controller.testModel.value.data?.list?[index].docType),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(controller.testModel.value.data?.list?[index].url ?? ''),
-                  ),
-                );
-              },
+          } else {
+            return SingleChildScrollView(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: controller.testModel.value.data?.list?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      controller.testModel.value.data?.list?[index].name ?? '',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    subtitle: Text(
+                      'UID: ${controller.testModel.value.data?.list?[index].uid}',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: _buildDocumentTypeIndicator(
+                        controller.testModel.value.data?.list?[index].docType),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          controller.testModel.value.data?.list?[index].url ??
+                              ''),
+                    ),
+                  );
+                },
+              ),
             );
           }
         },
@@ -71,4 +80,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
