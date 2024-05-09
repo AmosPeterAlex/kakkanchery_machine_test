@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
     controller.fetchData();
 
     return Scaffold(
+      appBar: AppBar(title: Text("Nexteons Test"),),
       body: Obx(
         () {
           if (controller.isLoading.value) {
@@ -19,26 +20,30 @@ class HomePage extends StatelessWidget {
             );
           } else {
             return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: controller.testModel.value.data?.list?.length ?? 0,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      controller.testModel.value.data?.list?[index].name ?? '',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    subtitle: Text(
-                      'UID: ${controller.testModel.value.data?.list?[index].uid}',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                    trailing: _buildDocumentTypeIndicator(
-                        controller.testModel.value.data?.list?[index].docType),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          controller.testModel.value.data?.list?[index].url ??
-                              ''),
+                  return Card(
+                    child: ListTile(
+                      title: Text(
+                        controller.testModel.value.data?.list?[index].name ?? '',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        'UID: ${controller.testModel.value.data?.list?[index].uid}',
+                        style:
+                            TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      trailing: _buildDocumentTypeIndicator(
+                          controller.testModel.value.data?.list?[index].docType),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            controller.testModel.value.data?.list?[index].url ??
+                                ''),
+                      ),
                     ),
                   );
                 },
